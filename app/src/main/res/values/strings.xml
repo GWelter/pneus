@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">WelterPneus</string>
+    <string name="title_activity_pneus_list">PneusListActivity</string>
+</resources>
