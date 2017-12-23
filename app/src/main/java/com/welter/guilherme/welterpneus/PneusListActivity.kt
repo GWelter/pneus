@@ -4,17 +4,16 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.opengl.Visibility
 import android.os.Bundle
 import android.support.v4.content.LocalBroadcastManager
-import android.support.v4.widget.CompoundButtonCompat
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.view.View
 import android.widget.CompoundButton
-import android.widget.Toast
+import com.welter.guilherme.welterpneus.adapters.PneusListAdapter
 import com.welter.guilherme.welterpneus.data.Constants
 import com.welter.guilherme.welterpneus.data.DatabaseHelper
+import com.welter.guilherme.welterpneus.data.Pneu
 
 import kotlinx.android.synthetic.main.activity_pneus_list.*
 import kotlinx.android.synthetic.main.content_pneus_list.*
@@ -25,8 +24,10 @@ class PneusListActivity : AppCompatActivity() {
     private lateinit var pneuAdapter: PneusListAdapter
 
     private fun setupAdapters() {
-        pneuAdapter = PneusListAdapter(this, Constants.pneus) { pneu ->
-            Toast.makeText(this, pneu.pneuSize.toString(), Toast.LENGTH_SHORT).show()
+        pneuAdapter = PneusListAdapter(this, Constants.pneus as List<Pneu>) { pneu ->
+            val intent = Intent(this, PneuDetailsActivity::class.java)
+            intent.putExtra("tamanho", pneu.pneuSize.toString())
+            startActivity(intent)
         }
 
         val layoutManager = LinearLayoutManager(this)
@@ -69,7 +70,6 @@ class PneusListActivity : AppCompatActivity() {
 
     private val broadcastReciever = object: BroadcastReceiver() {
         override fun onReceive(p0: Context?, p1: Intent?) {
-            println("Recebeu")
             pneuAdapter.notifyDataSetChanged()
             precoTotalEstoqueTextView.text = Constants.precoTotalEstoque.toString()
         }

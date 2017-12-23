@@ -16,6 +16,7 @@ class SavePneuActivity : AppCompatActivity() {
         setContentView(R.layout.activity_save_pneu)
 
         supportActionBar?.title = "Adicionar Pneu"
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
 
     fun salvarPneus(view: View) {

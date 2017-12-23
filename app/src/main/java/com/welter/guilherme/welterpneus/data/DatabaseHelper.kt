@@ -2,6 +2,9 @@ package com.welter.guilherme.welterpneus.data
 
 import android.content.ContentValues
 import android.content.Context
+import android.content.Intent
+import android.support.v4.content.LocalBroadcastManager
+
 
 /**
  * Created by guilherme on 23/12/17.
@@ -47,7 +50,42 @@ class DatabaseHelper(val context: Context) {
         db.close()
     }
 
-    fun queryPneusPorTamanho() {
-        val db = pneusDatabase.readableDatabase
+    fun queryDetailPeneus(tamanho: String) {
+        Constants.pneuDetails.clear()
+        var db = pneusDatabase.readableDatabase
+
+        val query = "select ${DatabaseSchema.NUMERACAO},"+
+                    "${DatabaseSchema.MARCA},"+
+                    "${DatabaseSchema.PRECO},"+
+                    "sum(${DatabaseSchema.PRECO}) as preco_total,"+
+                    "count(*) as quantia "+
+                    "from ${DatabaseSchema.TABELA} where ${DatabaseSchema.TAMANHO} = $tamanho "+
+                    "group by ${DatabaseSchema.NUMERACAO},${DatabaseSchema.MARCA}"
+
+        println(query)
+
+        val cursor = db.rawQuery(query, null)
+
+        if (cursor != null && cursor.count != 0) {
+            var precoTotalEstoque = 0.0f
+            cursor.moveToFirst()
+            do {
+                val numeracao = cursor.getString(cursor.getColumnIndex(DatabaseSchema.NUMERACAO))
+                val marca = cursor.getString(cursor.getColumnIndex(DatabaseSchema.MARCA))
+                val preco = cursor.getFloat(cursor.getColumnIndex(DatabaseSchema.PRECO))
+                val precoTotal = cursor.getFloat(cursor.getColumnIndex("preco_total"))
+                val quantia = cursor.getInt(cursor.getColumnIndex("quantia"))
+
+                precoTotalEstoque += precoTotal
+                Constants.pneuDetails.add(PneuDetails(numeracao, marca, preco, quantia))
+
+            } while (cursor.moveToNext())
+            println("Tamanho $tamanho, total $precoTotalEstoque")
+            Constants.precoTotalEstoquePorTamanho = precoTotalEstoque
+
+            val broadcast = Intent(Constants.LIST_PNEU_BROADCAST)
+            LocalBroadcastManager.getInstance(context).sendBroadcast(broadcast)
+        }
+        db.close()
     }
 }
