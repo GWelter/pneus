@@ -13,7 +13,7 @@
         android:layout_height="40dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:hint="14"
+        android:hint="00"
         android:ems="10"
         android:inputType="number"
         android:textSize="16sp"
@@ -30,7 +30,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:ems="10"
-        android:hint="Pirelli"
+        android:hint="Marca"
         android:inputType="textPersonName"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -62,27 +62,12 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:ems="10"
-        android:hint="100,00"
+        android:hint="000,00"
         android:inputType="numberDecimal"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/precoTextView"
         app:layout_constraintTop_toBottomOf="@+id/numeracaoEditText" />
-
-    <Button
-        android:id="@+id/button"
-        style="@style/Widget.AppCompat.Button.Borderless"
-        android:layout_width="200dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="32dp"
-        android:background="@color/colorPrimary"
-        android:text="Salvar"
-        android:textColor="@android:color/white"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/quantiaEditText" />
 
     <EditText
         android:id="@+id/quantiaEditText"
@@ -98,6 +83,22 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/quantiaTextView"
         app:layout_constraintTop_toBottomOf="@+id/precoEditText" />
+
+    <Button
+        android:id="@+id/button"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="32dp"
+        android:background="@color/colorPrimary"
+        android:onClick="salvarPneus"
+        android:text="Salvar"
+        android:textColor="@android:color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/quantiaEditText" />
 
     <TextView
         android:id="@+id/tamanhoTextView"

@@ -12,7 +12,6 @@
         <activity
             android:name=".PneusListActivity"
             android:label="@string/title_activity_pneus_list"
-            android:launchMode="singleTop"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -20,12 +19,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".SavePneuActivity"
-            android:parentActivityName=".PneusListActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".PneusListActivity" />
+        <activity android:name=".SavePneuActivity">
         </activity>
     </application>
 

@@ -1,4 +1,4 @@
-package com.welter.guilherme.welterpneus
+package com.welter.guilherme.welterpneus.data
 
 /**
  * Created by guilherme on 22/12/17.
