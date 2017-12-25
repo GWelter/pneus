@@ -10,12 +10,11 @@ import android.widget.TextView
 import android.widget.Toast
 import com.welter.guilherme.welterpneus.R
 import com.welter.guilherme.welterpneus.data.PneuDetails
-import org.w3c.dom.Text
 
 /**
  * Created by guilherme on 23/12/17.
  */
-class PneusDetailsAdapter(val context: Context, val pneuDetailList: List<PneuDetails>): RecyclerView.Adapter<PneusDetailsAdapter.PneuDetailHolder>() {
+class PneusDetailsAdapter(val context: Context, val pneuDetailList: List<PneuDetails>, val itemClick: (PneuDetails) -> Unit): RecyclerView.Adapter<PneusDetailsAdapter.PneuDetailHolder>() {
     override fun onBindViewHolder(holder: PneuDetailHolder?, position: Int) {
         holder?.bind(pneuDetailList[position])
     }
@@ -26,10 +25,10 @@ class PneusDetailsAdapter(val context: Context, val pneuDetailList: List<PneuDet
 
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): PneuDetailHolder? {
         val view = LayoutInflater.from(context).inflate(R.layout.pneu_details_item, parent, false)
-        return PneuDetailHolder(view)
+        return PneuDetailHolder(view, itemClick)
     }
 
-    inner class PneuDetailHolder(itemView: View?) : RecyclerView.ViewHolder(itemView) {
+    inner class PneuDetailHolder(itemView: View?, val itemClick: (PneuDetails) -> Unit) : RecyclerView.ViewHolder(itemView) {
 
         val numeracaoTextView = itemView?.findViewById<TextView>(R.id.numeracaoDetailsTextView)
         val marcaTextView = itemView?.findViewById<TextView>(R.id.marcaDetailsTextView)
@@ -43,9 +42,7 @@ class PneusDetailsAdapter(val context: Context, val pneuDetailList: List<PneuDet
             precoTextView?.text = "R$ " + pneuDetail.preco.toString()
             quantiaTextView?.text = pneuDetail.quantia.toString()
 
-            sellButton?.setOnClickListener {
-                Toast.makeText(context, pneuDetail.quantia.toString(), Toast.LENGTH_SHORT).show()
-            }
+            sellButton?.setOnClickListener { itemClick(pneuDetail) }
         }
     }
 }

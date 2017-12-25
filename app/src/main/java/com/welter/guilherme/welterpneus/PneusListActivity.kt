@@ -70,6 +70,9 @@ class PneusListActivity : AppCompatActivity() {
 
     private val broadcastReciever = object: BroadcastReceiver() {
         override fun onReceive(p0: Context?, p1: Intent?) {
+            if(Constants.pneus.isEmpty()){
+                Constants.precoTotalEstoque = 0f
+            }
             pneuAdapter.notifyDataSetChanged()
             precoTotalEstoqueTextView.text = Constants.precoTotalEstoque.toString()
         }

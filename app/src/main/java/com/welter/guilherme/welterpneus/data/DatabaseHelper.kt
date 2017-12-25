@@ -41,12 +41,15 @@ class DatabaseHelper(val context: Context) {
                 val precoTotal = cursor.getFloat(cursor.getColumnIndex("preco_total"))
 
                 precoTotalEstoque += precoTotal
-                println("Tamanho $tamanho, total $precoTotal")
 
                 Constants.pneus.add(Pneu(tamanho, quantia))
             } while (cursor.moveToNext())
             Constants.precoTotalEstoque = precoTotalEstoque
         }
+
+        val broadcast = Intent(Constants.SAVE_PNEU_BROADCAST)
+        LocalBroadcastManager.getInstance(context).sendBroadcast(broadcast)
+
         db.close()
     }
 
@@ -59,10 +62,8 @@ class DatabaseHelper(val context: Context) {
                     "${DatabaseSchema.PRECO},"+
                     "sum(${DatabaseSchema.PRECO}) as preco_total,"+
                     "count(*) as quantia "+
-                    "from ${DatabaseSchema.TABELA} where ${DatabaseSchema.TAMANHO} = $tamanho "+
+                    "from ${DatabaseSchema.TABELA} where ${DatabaseSchema.TAMANHO} = '$tamanho' "+
                     "group by ${DatabaseSchema.NUMERACAO},${DatabaseSchema.MARCA}"
-
-        println(query)
 
         val cursor = db.rawQuery(query, null)
 
@@ -80,12 +81,27 @@ class DatabaseHelper(val context: Context) {
                 Constants.pneuDetails.add(PneuDetails(numeracao, marca, preco, quantia))
 
             } while (cursor.moveToNext())
-            println("Tamanho $tamanho, total $precoTotalEstoque")
             Constants.precoTotalEstoquePorTamanho = precoTotalEstoque
 
             val broadcast = Intent(Constants.LIST_PNEU_BROADCAST)
             LocalBroadcastManager.getInstance(context).sendBroadcast(broadcast)
         }
+        db.close()
+    }
+
+    fun removePneus(numeracao: String, marca: String, quantia: Int) {
+        var db = pneusDatabase.readableDatabase
+
+        val removeQuery = "DELETE from ${DatabaseSchema.TABELA} "+
+                        "WHERE ${DatabaseSchema.ID} IN "+
+                        "(SELECT ${DatabaseSchema.ID} from ${DatabaseSchema.TABELA} "+
+                        "WHERE ${DatabaseSchema.NUMERACAO} = '$numeracao' "+
+                        "AND ${DatabaseSchema.MARCA} = '$marca' "+
+                        "LIMIT $quantia)"
+
+        println(removeQuery)
+
+        db.execSQL(removeQuery)
         db.close()
     }
 }

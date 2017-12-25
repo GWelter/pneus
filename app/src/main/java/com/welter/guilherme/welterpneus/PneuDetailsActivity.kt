@@ -1,30 +1,63 @@
 package com.welter.guilherme.welterpneus
 
-import android.content.BroadcastReceiver
-import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
+import android.content.*
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v4.content.LocalBroadcastManager
+import android.support.v7.app.AlertDialog
 import android.support.v7.widget.LinearLayoutManager
+import android.util.Log
 import android.view.View
 import android.widget.CompoundButton
+import android.widget.NumberPicker
 import com.welter.guilherme.welterpneus.adapters.PneusDetailsAdapter
 import com.welter.guilherme.welterpneus.data.Constants
 import com.welter.guilherme.welterpneus.data.DatabaseHelper
+import com.welter.guilherme.welterpneus.data.PneuDetails
 import kotlinx.android.synthetic.main.activity_pneu_details_acativity.*
 
 class PneuDetailsActivity : AppCompatActivity() {
 
     private lateinit var pneuDetailsAdapter: PneusDetailsAdapter
+    private lateinit var pneuTamanho: String
+    private var dbHelper = DatabaseHelper(this)
 
     private fun setupAdapters() {
-        pneuDetailsAdapter = PneusDetailsAdapter(this, Constants.pneuDetails)
+        pneuDetailsAdapter = PneusDetailsAdapter(this, Constants.pneuDetails) { pneuDetails ->
+            numberPickerDialaog(pneuDetails)
+        }
 
         val layoutManager = LinearLayoutManager(this)
         pneusDetailsListView.layoutManager = layoutManager
         pneusDetailsListView.adapter = pneuDetailsAdapter
+    }
+
+    private fun numberPickerDialaog(pneuDetails: PneuDetails) {
+        var removeQuantia = 1
+
+        val numberPicker = NumberPicker(this)
+        numberPicker.minValue = 1
+        numberPicker.maxValue = pneuDetails.quantia
+        numberPicker.setOnValueChangedListener({numberPicker, oldValue, newValue ->
+            removeQuantia = newValue
+        })
+
+        val dialog: AlertDialog.Builder = AlertDialog.Builder(this).setView(numberPicker);
+        dialog.setTitle("Remover do estoque")
+
+        dialog.setPositiveButton("OK") { dialogInterface, i ->
+            dbHelper.removePneus(pneuDetails.numeracao, pneuDetails.marca, removeQuantia)
+            dbHelper.queryDetailPeneus(pneuTamanho)
+            dbHelper.queryListaDePneus()
+
+            if(Constants.pneuDetails.isEmpty()) {
+                finish()
+            }
+
+        }
+        dialog.setNegativeButton("Cancelar") {dialogInterface, i ->  }
+
+        dialog.show()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,8 +66,7 @@ class PneuDetailsActivity : AppCompatActivity() {
 
         val extras = intent.extras
         val tamanho = extras.getString("tamanho")
-
-        var dbHelper = DatabaseHelper(this)
+        pneuTamanho = tamanho
         dbHelper.queryDetailPeneus(tamanho)
 
         setupAdapters()

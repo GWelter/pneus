@@ -38,9 +38,6 @@ class SavePneuActivity : AppCompatActivity() {
             dbHelper.insertPneu(tamanho, marca, numeracao, preco.toFloat(), quantia.toInt())
             dbHelper.queryListaDePneus()
 
-            val broadcast = Intent(Constants.SAVE_PNEU_BROADCAST)
-            LocalBroadcastManager.getInstance(this).sendBroadcast(broadcast)
-
             finish()
         }
     }
