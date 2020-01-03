@@ -13,6 +13,7 @@ class DatabaseHelper(val context: Context) {
     private var pneusDatabase: DatabaseSchema.DatabaseCreation = (DatabaseSchema.DatabaseCreation(context))
 
     fun insertPneu(tamanho: String, marca: String, numeracao: String, preco: Float, quantia: Int) {
+        removePneus(numeracao, marca, null)
         val db = pneusDatabase.writableDatabase
 
         for (x in 0 until quantia) {
@@ -25,6 +26,8 @@ class DatabaseHelper(val context: Context) {
             db.insert(DatabaseSchema.TABELA, null, valores)
         }
         db.close()
+        queryDetailPeneusBySize(tamanho)
+        queryListaDePneus()
     }
 
     fun queryListaDePneus() {
@@ -53,7 +56,7 @@ class DatabaseHelper(val context: Context) {
         db.close()
     }
 
-    fun queryDetailPeneus(tamanho: String) {
+    fun queryDetailPeneusBySize(tamanho: String) {
         Constants.pneuDetails.clear()
         var db = pneusDatabase.readableDatabase
 
@@ -89,7 +92,7 @@ class DatabaseHelper(val context: Context) {
         db.close()
     }
 
-    fun removePneus(numeracao: String, marca: String, quantia: Int) {
+    fun removePneus(numeracao: String, marca: String, quantia: Int?) {
         var db = pneusDatabase.readableDatabase
 
         val removeQuery = "DELETE from ${DatabaseSchema.TABELA} "+
@@ -97,7 +100,7 @@ class DatabaseHelper(val context: Context) {
                         "(SELECT ${DatabaseSchema.ID} from ${DatabaseSchema.TABELA} "+
                         "WHERE ${DatabaseSchema.NUMERACAO} = '$numeracao' "+
                         "AND ${DatabaseSchema.MARCA} = '$marca' "+
-                        "LIMIT $quantia)"
+                        if (quantia !== null) "LIMIT $quantia)" else ")"
 
         println(removeQuery)
 

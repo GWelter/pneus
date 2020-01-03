@@ -15,8 +15,25 @@ class SavePneuActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_save_pneu)
 
+        val extras = intent.extras
+        loadParams(extras)
+
         supportActionBar?.title = "Adicionar Pneu"
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+    }
+
+    private fun loadParams(extras: Bundle?) {
+        val tamanho = extras?.getString("PNEU_TAMANHO", "")
+        val numeracao = extras?.getString("PNEU_NUMERACAO", "")
+        val marca = extras?.getString("PNEU_MARCA", "")
+        val preco = extras?.getFloat("PNEU_PRECO", 0.0f)
+        val quantia = extras?.getInt("PNEU_QUANTIA", 0)
+
+        tamanhoEditText.setText(tamanho)
+        numeracaoEditText.setText(numeracao)
+        marcaEditText.setText(marca)
+        precoEditText.setText(preco.toString())
+        quantiaEditText.setText(quantia.toString())
     }
 
     fun salvarPneus(view: View) {

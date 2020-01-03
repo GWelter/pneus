@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
@@ -14,7 +15,7 @@ import com.welter.guilherme.welterpneus.data.PneuDetails
 /**
  * Created by guilherme on 23/12/17.
  */
-class PneusDetailsAdapter(val context: Context, val pneuDetailList: List<PneuDetails>, val itemClick: (PneuDetails) -> Unit): RecyclerView.Adapter<PneusDetailsAdapter.PneuDetailHolder>() {
+class PneusDetailsAdapter(val context: Context, val pneuDetailList: List<PneuDetails>, val itemSellClick: (PneuDetails) -> Unit, val itemClick: (PneuDetails) -> Unit): RecyclerView.Adapter<PneusDetailsAdapter.PneuDetailHolder>() {
     override fun onBindViewHolder(holder: PneuDetailHolder?, position: Int) {
         holder?.bind(pneuDetailList[position])
     }
@@ -25,10 +26,10 @@ class PneusDetailsAdapter(val context: Context, val pneuDetailList: List<PneuDet
 
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): PneuDetailHolder? {
         val view = LayoutInflater.from(context).inflate(R.layout.pneu_details_item, parent, false)
-        return PneuDetailHolder(view, itemClick)
+        return PneuDetailHolder(view, itemSellClick, itemClick)
     }
 
-    inner class PneuDetailHolder(itemView: View?, val itemClick: (PneuDetails) -> Unit) : RecyclerView.ViewHolder(itemView) {
+    inner class PneuDetailHolder(itemView: View?, val itemSellClick: (PneuDetails) -> Unit, val itemClick: (PneuDetails) -> Unit) : RecyclerView.ViewHolder(itemView) {
 
         val numeracaoTextView = itemView?.findViewById<TextView>(R.id.numeracaoDetailsTextView)
         val marcaTextView = itemView?.findViewById<TextView>(R.id.marcaDetailsTextView)
@@ -42,7 +43,8 @@ class PneusDetailsAdapter(val context: Context, val pneuDetailList: List<PneuDet
             precoTextView?.text = "R$ " + pneuDetail.preco.toString()
             quantiaTextView?.text = pneuDetail.quantia.toString()
 
-            sellButton?.setOnClickListener { itemClick(pneuDetail) }
+            sellButton?.setOnClickListener { itemSellClick(pneuDetail) }
+            itemView.setOnClickListener { itemClick(pneuDetail) }
         }
     }
 }

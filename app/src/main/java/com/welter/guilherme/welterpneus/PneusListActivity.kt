@@ -4,9 +4,11 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.graphics.drawable.ClipDrawable
 import android.os.Bundle
 import android.support.v4.content.LocalBroadcastManager
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.view.View
 import android.widget.CompoundButton
@@ -34,6 +36,9 @@ class PneusListActivity : AppCompatActivity() {
 
         pneusListView2.layoutManager = layoutManager
         pneusListView2.adapter = pneuAdapter
+
+        val itemDecoration = DividerItemDecoration(this, ClipDrawable.HORIZONTAL)
+        pneusListView2.addItemDecoration(itemDecoration)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -12,7 +12,7 @@ import com.welter.guilherme.welterpneus.data.Pneu
 /**
  * Created by guilherme on 22/12/17.
  */
-class PneusListAdapter(val context: Context, val pneusList: List<Pneu>, val itemClick: (Pneu) -> Unit): RecyclerView.Adapter<PneusListAdapter.Holder>() {
+class PneusListAdapter(val context: Context, private val pneusList: List<Pneu>, val itemClick: (Pneu) -> Unit): RecyclerView.Adapter<PneusListAdapter.Holder>() {
     override fun onBindViewHolder(holder: Holder?, position: Int) {
         holder?.bindHolder(pneusList[position])
     }
@@ -27,8 +27,8 @@ class PneusListAdapter(val context: Context, val pneusList: List<Pneu>, val item
     }
 
     inner class Holder(itemView: View?, val itemClick: (Pneu) -> Unit) : RecyclerView.ViewHolder(itemView) {
-        val pneuSize = itemView?.findViewById<TextView>(R.id.pneuSizeTextView)
-        val pneuQuantity = itemView?.findViewById<TextView>(R.id.pneuQuantityTextView)
+        private val pneuSize = itemView?.findViewById<TextView>(R.id.pneuSizeTextView)
+        private val pneuQuantity = itemView?.findViewById<TextView>(R.id.pneuQuantityTextView)
 
         fun bindHolder(pneu: Pneu) {
             pneuSize?.text = pneu.pneuSize.toString()
