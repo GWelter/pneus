@@ -2,12 +2,12 @@ package com.welter.guilherme.welterpneus
 
 import android.content.*
 import android.graphics.drawable.ClipDrawable.HORIZONTAL
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.support.v4.content.LocalBroadcastManager
-import android.support.v7.app.AlertDialog
-import android.support.v7.widget.DividerItemDecoration
-import android.support.v7.widget.LinearLayoutManager
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import androidx.appcompat.app.AlertDialog
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
 import android.util.Log
 import android.view.View
 import android.widget.CompoundButton
@@ -51,14 +51,14 @@ class PneuDetailsActivity : AppCompatActivity() {
         val numberPicker = NumberPicker(this)
         numberPicker.minValue = 1
         numberPicker.maxValue = pneuDetails.quantia
-        numberPicker.setOnValueChangedListener { numberPicker, oldValue, newValue ->
+        numberPicker.setOnValueChangedListener { _, _, newValue ->
             removeQuantia = newValue
         }
 
         val dialog: AlertDialog.Builder = AlertDialog.Builder(this).setView(numberPicker);
         dialog.setTitle("Remover do estoque")
 
-        dialog.setPositiveButton("OK") { dialogInterface, i ->
+        dialog.setPositiveButton("OK") { _, _ ->
             dbHelper.removePneus(pneuDetails.numeracao, pneuDetails.marca, removeQuantia)
             dbHelper.queryDetailPeneusBySize(pneuTamanho)
             dbHelper.queryListaDePneus()
@@ -68,7 +68,7 @@ class PneuDetailsActivity : AppCompatActivity() {
             }
 
         }
-        dialog.setNegativeButton("Cancelar") {dialogInterface, i ->  }
+        dialog.setNegativeButton("Cancelar") {_, _ ->  }
 
         dialog.show()
     }
@@ -78,7 +78,7 @@ class PneuDetailsActivity : AppCompatActivity() {
         setContentView(R.layout.activity_pneu_details_acativity)
 
         val extras = intent.extras
-        val tamanho = extras.getString("tamanho")
+        val tamanho = extras!!.getString("tamanho", "")
         pneuTamanho = tamanho
         dbHelper.queryDetailPeneusBySize(tamanho)
 
